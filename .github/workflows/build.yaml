@@ -1,0 +1,39 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        BUILD_TYPE: ["Debug", "Release"]
+        os: [ windows-2019 ] # windows-2022 sf cluster cannot start
+        BOOST_VERSION: [ 1.79.0 ]
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Get MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+
+    - name: Get specific version CMake, v3.21.2
+      uses: lukka/get-cmake@v3.21.2
+
+    - name: check sf exist
+      run: |
+        Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Service Fabric\' -Name FabricVersion
+      shell: pwsh
+
+    # we use winrt with coro support. Use the latest winsdk.
+    # github runner has multiple versions of winsdk installed, and we use the latest one.
+    - name: run cmake
+      env:
+        BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
+      run: > 
+        cmake . -DCMAKE_BUILD_TYPE=${{ matrix.BUILD_TYPE }} -B build -G "Visual Studio 16 2019" -T host=x64 -A x64
+    - name: run build
+      run: cmake --build build --config ${{ matrix.BUILD_TYPE }}
+
+    - name: run generate all
+      run: cmake --build build --config ${{ matrix.BUILD_TYPE }} --target generate_fabric_all

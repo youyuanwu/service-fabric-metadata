@@ -28,7 +28,7 @@ function(add_fabric_lib)
     # generate fabric import lib
     add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_out_file}
-        COMMAND ${fabric_metadata_SOURCE_DIR}/scripts/dll2lib.bat 64 "${${_lib_var}}"
+        COMMAND ${fabric-metadata_SOURCE_DIR}/scripts/dll2lib.bat 64 "${${_lib_var}}"
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         VERBATIM
     )

@@ -12,6 +12,8 @@ endif()
 if(fabric_metadata_MAIN_PROJECT)
   include(cmake/fetch_get_files.cmake)
   include(cmake/fetch_get_internal_files.cmake)
+  # fabric headers are utf16 and clang fmt cannot format them.
+  #include(cmake/clang-format.cmake)
 endif()
 
 # common lib dir
@@ -23,3 +25,19 @@ set(ServiceFabric_Runtime_BINARY_DIR "${ServiceFabric_Runtime_ROOT}\\bin\\Fabric
 
 include(cmake/ImportFabric.cmake)
 add_subdirectory(src)
+
+if(fabric_metadata_MAIN_PROJECT)
+  add_custom_target(generate_fabric_all
+    DEPENDS 
+    generate_cpp_headers
+    generate_internal_cpp_headers
+    copy_fabric_internal_uuid_files
+    copy_fabric_uuid_files
+    # generate all support libs
+    FabricRuntime
+    FabricClient
+    FabricResources
+    FabricServiceCommunication
+    FabricTransport
+  )
+endif()
