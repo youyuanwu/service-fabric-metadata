@@ -1,4 +1,7 @@
 # fabric-metadata
+![ci](https://github.com/youyuanwu/fabric-metadata/actions/workflows/build.yaml/badge.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/youyuanwu/fabric-metadata/main/LICENSE)
+
 Metadata of service-fabric copied and selected from: [service-fabric](https://github.com/microsoft/service-fabric) 
 
 # Depenencies
