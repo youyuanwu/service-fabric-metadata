@@ -60,6 +60,7 @@ add_custom_target(generate_internal_cpp_headers
 )
 
 add_custom_target(copy_fabric_internal_uuid_files
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/src/fabric_internal/src
   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${out_srcs} ${CMAKE_CURRENT_SOURCE_DIR}/src/fabric_internal/src
   DEPENDS ${out_srcs}
 )

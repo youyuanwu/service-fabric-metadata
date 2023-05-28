@@ -27,8 +27,38 @@ include(cmake/ImportFabric.cmake)
 add_subdirectory(src)
 
 if(fabric_metadata_MAIN_PROJECT)
+  # generate winmd. defer generation task in .metadata csproj.
+  find_program (
+      dotnet_exe
+      NAMES dotnet.exe
+      REQUIRED
+  )
+  set(_out_winmds
+    ServiceFabric.winmd
+    Windows.Win32.Interop.winmd
+    Windows.Win32.winmd
+  )
+  set(_out_winmd_paths "")
+  foreach(_out_winmd ${_out_winmds})
+  list(APPEND _out_winmd_paths ${CMAKE_CURRENT_SOURCE_DIR}/.windows/winmd/${_out_winmd})
+  endforeach()
+
+  add_custom_command(
+    OUTPUT ${_out_winmd_paths}
+    COMMAND ${dotnet_exe} build
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.metadata
+    VERBATIM
+  )
+
+  # force generate
+  add_custom_target(generate_winmd
+    DEPENDS ${_out_winmd_paths}
+  )
+
+  # generate cpp
   add_custom_target(generate_fabric_all
-    DEPENDS 
+    DEPENDS
+    generate_winmd
     generate_cpp_headers
     generate_internal_cpp_headers
     copy_fabric_internal_uuid_files
@@ -39,5 +69,12 @@ if(fabric_metadata_MAIN_PROJECT)
     FabricResources
     FabricServiceCommunication
     FabricTransport
+  )
+
+  # clean all generated code
+  add_custom_target(force_clean
+    COMMAND ${CMAKE_COMMAND} -E rm -rf .metadata/Obj .metadata/bin .windows src/fabric/include src/fabric/src
+    src/fabric_internal/include src/fabric_internal/src
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   )
 endif()

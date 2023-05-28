@@ -25,6 +25,15 @@ jobs:
         Get-ItemPropertyValue 'HKLM:\SOFTWARE\Microsoft\Service Fabric\' -Name FabricVersion
       shell: pwsh
 
+    # winmd generate
+    - name: setup dotnet
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'
+    
+    - name: install ClangSharpPInvokeGenerator
+      run: dotnet tool install --global ClangSharpPInvokeGenerator --version 15.0.2    
+
     # we use winrt with coro support. Use the latest winsdk.
     # github runner has multiple versions of winsdk installed, and we use the latest one.
     - name: run cmake
