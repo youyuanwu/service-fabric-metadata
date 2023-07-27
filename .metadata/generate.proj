@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.Windows.WinmdGenerator/0.33.18-preview">
     <PropertyGroup Label="Globals">
-        <OutputWinmd>../.windows/winmd/ServiceFabric.winmd</OutputWinmd>
+        <OutputWinmd>../.windows/winmd/Microsoft.ServiceFabric.winmd</OutputWinmd>
         <WinmdVersion>255.255.255.255</WinmdVersion>
         <SFIdlDir>../idl</SFIdlDir>
         <AdditionalIncludes>$(SFIdlDir)</AdditionalIncludes>
