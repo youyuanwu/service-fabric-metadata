@@ -4,10 +4,11 @@
         <OutputWinmd>../.windows/winmd/Microsoft.ServiceFabric.winmd</OutputWinmd>
         <WinmdVersion>255.255.255.255</WinmdVersion>
         <SFIdlDir>../idl</SFIdlDir>
+        <SFInternalIdlDir>../internal_idl</SFInternalIdlDir>
         <AdditionalIncludes>$(SFIdlDir)</AdditionalIncludes>
     </PropertyGroup>
     <ItemGroup>
-        <Idls Include="$(SFIdlDir)\FabricClient.idl;$(SFIdlDir)\FabricCommon.idl;$(SFIdlDir)\FabricRuntime.idl;$(SFIdlDir)\FabricTypes.idl" />
+        <Idls Include="$(SFIdlDir)\FabricClient.idl;$(SFIdlDir)\FabricCommon.idl;$(SFIdlDir)\FabricRuntime.idl;$(SFIdlDir)\FabricTypes.idl;$(SFInternalIdlDir)\fabrictransport_.idl" />
         <ImportLibs Include="../build/src/*.lib" />
         <Partition Include="FabricTypes.cpp">
             <TraverseFiles>$(CompiledHeadersDir)\FabricTypes.h</TraverseFiles>
@@ -24,6 +25,10 @@
         <Partition Include="FabricRuntime.cpp">
             <TraverseFiles>$(CompiledHeadersDir)\FabricRuntime.h</TraverseFiles>
             <Namespace>Microsoft.ServiceFabric.FabricCommon.FabricRuntime</Namespace>
+        </Partition>
+        <Partition Include="FabricTransport.cpp">
+            <TraverseFiles>$(CompiledHeadersDir)\fabrictransport_.h</TraverseFiles>
+            <Namespace>Microsoft.ServiceFabric.FabricCommon.FabricTransport</Namespace>
         </Partition>
     </ItemGroup>
     <Target Name="CopyWin32Metadata" AfterTargets="Build">

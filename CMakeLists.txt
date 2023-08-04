@@ -53,6 +53,12 @@ if(fabric_metadata_MAIN_PROJECT)
   # force generate
   add_custom_target(generate_winmd
     DEPENDS ${_out_winmd_paths}
+    # generate all support libs. generator needs to scan support lib files
+    FabricRuntime
+    FabricClient
+    FabricResources
+    FabricServiceCommunication
+    FabricTransport
   )
 
   # generate cpp
@@ -63,12 +69,6 @@ if(fabric_metadata_MAIN_PROJECT)
     generate_internal_cpp_headers
     copy_fabric_internal_uuid_files
     copy_fabric_uuid_files
-    # generate all support libs
-    FabricRuntime
-    FabricClient
-    FabricResources
-    FabricServiceCommunication
-    FabricTransport
   )
 
   # clean all generated code
