@@ -1,0 +1,11 @@
+[package]
+name = "fabric-metadata"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+
+# This is a dummy pkg to host fabric import libs
+# import libs are checkin in /importlibs dir. build.rs will propagate this link search dir
+# to downstream targets.
+
+[dependencies]

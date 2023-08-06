@@ -27,9 +27,9 @@ function(add_fabric_lib)
 
     # generate fabric import lib
     add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_out_file}
+        OUTPUT ${fabric-metadata_SOURCE_DIR}/importlibs/${_out_file}
         COMMAND ${fabric-metadata_SOURCE_DIR}/scripts/dll2lib.bat 64 "${${_lib_var}}"
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        WORKING_DIRECTORY ${fabric-metadata_SOURCE_DIR}/importlibs
         VERBATIM
     )
 
@@ -44,7 +44,7 @@ function(add_fabric_lib)
     set(_generate_target_name "generate_${FABRIC_LIB_NAME}_lib")
     add_custom_target(${_generate_target_name}
         DEPENDS 
-        ${CMAKE_CURRENT_BINARY_DIR}/${_out_file}
+        ${fabric-metadata_SOURCE_DIR}/importlibs/${_out_file}
     )
 
     add_dependencies(${FABRIC_LIB_NAME} ${_generate_target_name})

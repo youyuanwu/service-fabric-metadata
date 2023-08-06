@@ -27,6 +27,10 @@ winmd for service-fabric that is used to generate csharp or rust code in [.windo
 # Example usage
 See [fabric-rpc](https://github.com/youyuanwu/fabric-rpc) for example of how to use this project.
 
+# Rust
+Exposes fabric support libs to rust lang through build.rs.
+winmd is used by windows rust tool chain to generate rust bindings. See [service-fabric-rs](https://github.com/youyuanwu/service-fabric-rs) for details.
+
 # License
 idl files and generated cpp and c files have Microsoft MIT license.
 The project has MIT license.
