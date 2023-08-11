@@ -38,7 +38,7 @@ function(add_fabric_lib)
     #set_target_properties(FabricClient PROPERTIES IMPORTED_IMPLIB ${CMAKE_CURRENT_BINARY_DIR}/FabricClient.lib )
     set_target_properties(${FABRIC_LIB_NAME} PROPERTIES
         IMPORTED_LOCATION ${_lib_var}
-        IMPORTED_IMPLIB ${CMAKE_CURRENT_BINARY_DIR}/${_out_file}
+        IMPORTED_IMPLIB ${fabric-metadata_SOURCE_DIR}/importlibs/${_out_file}
     )
 
     set(_generate_target_name "generate_${FABRIC_LIB_NAME}_lib")
