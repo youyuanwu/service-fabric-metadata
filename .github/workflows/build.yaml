@@ -8,8 +8,7 @@ jobs:
     strategy:
       matrix:
         BUILD_TYPE: ["Debug", "Release"]
-        os: [ windows-2019 ] # windows-2022 sf cluster cannot start
-        BOOST_VERSION: [ 1.79.0 ]
+        os: [ windows-2022 ]
     steps:
 
     - uses: actions/checkout@v2
@@ -34,14 +33,11 @@ jobs:
     - name: install ClangSharpPInvokeGenerator
       run: dotnet tool install --global ClangSharpPInvokeGenerator --version 16.0.0   
 
-    # we use winrt with coro support. Use the latest winsdk.
-    # github runner has multiple versions of winsdk installed, and we use the latest one.
     - name: run cmake
       run: > 
-        cmake . -DCMAKE_BUILD_TYPE=${{ matrix.BUILD_TYPE }} -B build -G "Visual Studio 16 2019" -T host=x64 -A x64
+        cmake . -DCMAKE_BUILD_TYPE=${{ matrix.BUILD_TYPE }} -B build -T host=x64 -A x64
     - name: run build
       run: cmake --build build --config ${{ matrix.BUILD_TYPE }}
 
     - name: run generate all
-      continue-on-error: true # this is known to fail due to vs component not installed on runners
       run: cmake --build build --config ${{ matrix.BUILD_TYPE }} --target generate_fabric_all

@@ -1,6 +1,6 @@
-# TODO
+# Notes
 The winmd generator has check of VS compenents but are not necessary. 
-This is why generation in ci is disabled.
+If locally winmd generate may fail due to vs components missing, even though they are not needed.
 
 This fails:
 & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -prerelease -format xml `
