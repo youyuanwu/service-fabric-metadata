@@ -34,8 +34,7 @@ if(fabric_metadata_MAIN_PROJECT)
       REQUIRED
   )
   set(_out_winmds
-    ServiceFabric.winmd
-    Windows.Win32.Interop.winmd
+    Microsoft.ServiceFabric.winmd
     Windows.Win32.winmd
   )
   set(_out_winmd_paths "")
@@ -50,15 +49,20 @@ if(fabric_metadata_MAIN_PROJECT)
     VERBATIM
   )
 
-  # force generate
-  add_custom_target(generate_winmd
-    DEPENDS ${_out_winmd_paths}
-    # generate all support libs. generator needs to scan support lib files
+  add_custom_target(generate_importlibs
+    DEPENDS
+    # generate all support libs. 
     FabricRuntime
     FabricClient
     FabricResources
     FabricServiceCommunication
     FabricTransport
+  )
+
+  # force generate
+  add_custom_target(generate_winmd
+    DEPENDS ${_out_winmd_paths}
+    generate_importlibs # generator needs to scan support lib files
   )
 
   # generate cpp
@@ -74,7 +78,7 @@ if(fabric_metadata_MAIN_PROJECT)
   # clean all generated code
   add_custom_target(force_clean
     COMMAND ${CMAKE_COMMAND} -E rm -rf .metadata/Obj .metadata/bin .windows src/fabric/include src/fabric/src
-    src/fabric_internal/include src/fabric_internal/src
+    src/fabric_internal/include src/fabric_internal/src importlibs
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   )
 endif()
