@@ -31,7 +31,7 @@ foreach(_idl_file ${idl_files})
     set(_out_src ${_out_dir}/${_file_name}_i.c)
     add_custom_command(
         OUTPUT ${_out_header} ${_out_src}
-        COMMAND ${MIDL_exe} /no_settings_comment /I ${CMAKE_CURRENT_SOURCE_DIR}/idl ${_idl_out_path} /out ${_out_dir}
+        COMMAND ${MIDL_exe} /no_settings_comment /utf8 /I ${CMAKE_CURRENT_SOURCE_DIR}/idl ${_idl_out_path} /out ${_out_dir}
         # remove unused outfile
         COMMAND ${CMAKE_COMMAND} -E rm -f ${_out_dir}/${_file_name}_p.c ${_out_dir}/${_file_name}.tlb ${_out_dir}/dlldata.c
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
@@ -52,7 +52,7 @@ endforeach()
 message(STATUS "fetching coan")
 include(FetchContent)
 FetchContent_Declare(coan
-  URL https://pilotfiber.dl.sourceforge.net/project/coan2/v6.0.1/coan-6.0.1-x86_64.exe
+  URL https://master.dl.sourceforge.net/project/coan2/v6.0.1/coan-6.0.1-x86_64.exe
   URL_HASH MD5=d2a75c99b45b85e1cfb6e2864395e55b
   DOWNLOAD_NO_EXTRACT TRUE
 )
@@ -75,23 +75,27 @@ foreach(_header_c ${out_headers})
     set(_out_header_cpp ${_out_dir}/${_file_name}.h)
     add_custom_command(
         OUTPUT ${_out_header_cpp}
-        COMMAND powershell.exe -file "${fabric-metadata_SOURCE_DIR}/scripts/gen_cpp.ps1" -Source ${_header_c} -OutFile ${_out_header_cpp}
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${_header_c} ${_out_header_cpp}
+        # coan produces utf16 that is problematic
+        # COMMAND powershell.exe -file "${fabric-metadata_SOURCE_DIR}/scripts/gen_cpp.ps1" -Source ${_header_c} -OutFile ${_out_header_cpp}
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} # coan relative to the cmake source dir
         DEPENDS ${_header_c}
     )
     list(APPEND out_header_cpps ${_out_header_cpp})
 endforeach()
 
-# generate trimmed cpp headers into src/fabric/include
-add_custom_target(generate_cpp_headers
-    DEPENDS ${out_header_cpps}
-)
-
 add_custom_target(copy_fabric_uuid_files
   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/src/fabric/src
   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${out_srcs} ${CMAKE_CURRENT_SOURCE_DIR}/src/fabric/src
   DEPENDS ${out_srcs}
 )
+
+# generate trimmed cpp headers into src/fabric/include
+add_custom_target(generate_cpp_headers
+    DEPENDS ${out_header_cpps}
+    copy_fabric_uuid_files
+)
+
 # fabric cpp only headers
 # add_library(fabric_headers INTERFACE ${out_header_cpps})
 # target_include_directories(fabric_headers INTERFACE

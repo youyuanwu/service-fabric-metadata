@@ -24,7 +24,7 @@ endif()
 set(ServiceFabric_Runtime_BINARY_DIR "${ServiceFabric_Runtime_ROOT}\\bin\\Fabric\\Fabric.Code")
 
 include(cmake/ImportFabric.cmake)
-add_subdirectory(src)
+# add_subdirectory(src)
 
 if(fabric_metadata_MAIN_PROJECT)
   # generate winmd. defer generation task in .metadata csproj.
@@ -48,6 +48,19 @@ if(fabric_metadata_MAIN_PROJECT)
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.metadata
     VERBATIM
   )
+
+  # add fabric import libs
+  set(FABRIC_LIB_NAMES
+    FabricRuntime
+    FabricClient
+    FabricResources
+    FabricServiceCommunication
+    FabricTransport
+  )
+
+  foreach(_fabric_lib_name ${FABRIC_LIB_NAMES})
+    add_fabric_lib(NAME ${_fabric_lib_name})
+  endforeach()
 
   add_custom_target(generate_importlibs
     DEPENDS

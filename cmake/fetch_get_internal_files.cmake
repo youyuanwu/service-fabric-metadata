@@ -25,7 +25,7 @@ foreach(_idl_file ${internal_idl_files})
     add_custom_command(
         OUTPUT ${_out_header} ${_out_src}
         BYPRODUCTS ${_out_dir}/${_file_name}_p.c ${_out_dir}/${_file_name}.tlb
-        COMMAND ${MIDL_exe} /no_settings_comment /I ${CMAKE_CURRENT_SOURCE_DIR}/idl /I ${CMAKE_CURRENT_SOURCE_DIR}/internal_idl ${_idl_out_path} /out ${_out_dir}
+        COMMAND ${MIDL_exe} /no_settings_comment /utf8 /I ${CMAKE_CURRENT_SOURCE_DIR}/idl /I ${CMAKE_CURRENT_SOURCE_DIR}/internal_idl ${_idl_out_path} /out ${_out_dir}
         COMMAND ${CMAKE_COMMAND} -E rm -f ${_out_dir}/${_file_name}_p.c ${_out_dir}/${_file_name}.tlb ${_out_dir}/dlldata.c
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         VERBATIM
@@ -48,21 +48,23 @@ foreach(_header_c ${out_headers})
     set(_out_header_cpp ${_out_dir}/${_file_name}.h)
     add_custom_command(
         OUTPUT ${_out_header_cpp}
-        COMMAND powershell.exe -file "${fabric-metadata_SOURCE_DIR}/scripts/gen_cpp.ps1" -Source ${_header_c} -OutFile ${_out_header_cpp}
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${_header_c} ${_out_header_cpp}
+        # COMMAND powershell.exe -file "${fabric-metadata_SOURCE_DIR}/scripts/gen_cpp.ps1" -Source ${_header_c} -OutFile ${_out_header_cpp}
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         DEPENDS ${_header_c}
     )
     list(APPEND out_header_cpps ${_out_header_cpp})
 endforeach()
 
-add_custom_target(generate_internal_cpp_headers
-    DEPENDS ${out_header_cpps}
-)
-
 add_custom_target(copy_fabric_internal_uuid_files
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/src/fabric_internal/src
   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${out_srcs} ${CMAKE_CURRENT_SOURCE_DIR}/src/fabric_internal/src
   DEPENDS ${out_srcs}
+)
+
+add_custom_target(generate_internal_cpp_headers
+    DEPENDS ${out_header_cpps}
+    copy_fabric_internal_uuid_files
 )
 
 # fabric cpp only headers
