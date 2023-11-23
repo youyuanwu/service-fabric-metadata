@@ -10,6 +10,13 @@
         <ScanArch>x64</ScanArch>
     </PropertyGroup>
     <ItemGroup>
+        <!-- Used to change agile attribute. 
+            In SF internal implementation, COM are most likely designed for multi-threading.
+            Agile attribute tells windows Rust tool chain to mark COM as Send, therefore avoids unnecessary manual wrappings.
+            If Com is in fact not agile for special cases, user of the SF Rust needs to handle it with care. -->
+        <EmitterRsp Include="emitter.settings.rsp"/>
+    </ItemGroup>
+    <ItemGroup>
         <Idls Include="$(SFIdlDir)\FabricClient.idl;$(SFIdlDir)\FabricCommon.idl;$(SFIdlDir)\FabricRuntime.idl;$(SFIdlDir)\FabricTypes.idl;$(SFInternalIdlDir)\fabrictransport_.idl" />
         <ImportLibs Include="../importlibs/*.lib" />
         <Partition Include="FabricTypes.cpp">
