@@ -51,6 +51,7 @@ if(fabric_metadata_MAIN_PROJECT)
 
   # add fabric import libs
   set(FABRIC_LIB_NAMES
+    FabricCommon
     FabricRuntime
     FabricClient
     FabricResources
@@ -65,6 +66,7 @@ if(fabric_metadata_MAIN_PROJECT)
   add_custom_target(generate_importlibs
     DEPENDS
     # generate all support libs. 
+    FabricCommon
     FabricRuntime
     FabricClient
     FabricResources
