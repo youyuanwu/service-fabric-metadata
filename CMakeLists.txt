@@ -16,13 +16,6 @@ if(fabric_metadata_MAIN_PROJECT)
   #include(cmake/clang-format.cmake)
 endif()
 
-# common lib dir
-if(NOT ServiceFabric_Runtime_ROOT)
-    set(ServiceFabric_Runtime_ROOT "C:\\Program Files\\Microsoft Service Fabric")
-endif()
-
-set(ServiceFabric_Runtime_BINARY_DIR "${ServiceFabric_Runtime_ROOT}\\bin\\Fabric\\Fabric.Code")
-
 include(cmake/ImportFabric.cmake)
 # add_subdirectory(src)
 
@@ -60,7 +53,11 @@ if(fabric_metadata_MAIN_PROJECT)
   )
 
   foreach(_fabric_lib_name ${FABRIC_LIB_NAMES})
-    add_fabric_lib(NAME ${_fabric_lib_name})
+    add_fabric_lib(
+      NAME ${_fabric_lib_name}
+      OUTDIR ${CMAKE_CURRENT_SOURCE_DIR}/importlibs
+      DLLDIR ${ServiceFabric_Runtime_BINARY_DIR}
+    )
   endforeach()
 
   add_custom_target(generate_importlibs

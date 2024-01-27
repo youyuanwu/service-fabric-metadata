@@ -1,8 +1,16 @@
+# common lib dir
+if(NOT ServiceFabric_Runtime_ROOT)
+    set(ServiceFabric_Runtime_ROOT "C:\\Program Files\\Microsoft Service Fabric")
+endif()
+
+set(ServiceFabric_Runtime_BINARY_DIR "${ServiceFabric_Runtime_ROOT}\\bin\\Fabric\\Fabric.Code")
+
+# this function generates from import lib from a dll
 function(add_fabric_lib)
     cmake_parse_arguments(
         FABRIC_LIB # prefix of output variables
         "" # list of names of the boolean arguments (only defined ones will be true)
-        "NAME" # list of names of mono-valued arguments
+        "NAME;OUTDIR;DLLDIR" # list of names of mono-valued arguments
         #"SRCS;DEPS" # list of names of multi-valued arguments (output variables are lists)
         ""
         ${ARGN} # arguments of the function to parse, here we take the all original ones
@@ -11,6 +19,14 @@ function(add_fabric_lib)
     if(NOT FABRIC_LIB_NAME)
         message(FATAL_ERROR "Name param not found")
     endif(NOT FABRIC_LIB_NAME)
+
+    if(NOT FABRIC_LIB_OUTDIR)
+        message(FATAL_ERROR "Name param not found")
+    endif(NOT FABRIC_LIB_OUTDIR)
+
+    if(NOT FABRIC_LIB_DLLDIR)
+        message(FATAL_ERROR "Name param not found")
+    endif(NOT FABRIC_LIB_DLLDIR)
     # message("Provided sources are:")
     # foreach(src ${PARSED_ARGS_SRCS})
     #     message("- ${src}")
@@ -20,16 +36,27 @@ function(add_fabric_lib)
     set(_out_file "${FABRIC_LIB_NAME}.lib")
     find_file(${_lib_var}
         NAMES ${_lib_file}
-        PATHS ${ServiceFabric_Runtime_BINARY_DIR}
+        PATHS ${FABRIC_LIB_DLLDIR}
         REQUIRED
     )
     message(STATUS "Found ${FABRIC_LIB_NAME}: ${${_lib_var}}")
 
+    # set root dir for looking script
+    if(fabric-metadata_SOURCE_DIR)
+        # the project self
+        set(_project_root ${fabric-metadata_SOURCE_DIR})
+    elseif(fabric_metadata_SOURCE_DIR)
+        # fetch content use
+        set(_project_root ${fabric_metadata_SOURCE_DIR})
+    else()
+        message(FATAL_ERROR "fabric_metadata project root not found")
+    endif()
+
     # generate fabric import lib
     add_custom_command(
-        OUTPUT ${fabric-metadata_SOURCE_DIR}/importlibs/${_out_file}
-        COMMAND ${fabric-metadata_SOURCE_DIR}/scripts/dll2lib.bat 64 "${${_lib_var}}"
-        WORKING_DIRECTORY ${fabric-metadata_SOURCE_DIR}/importlibs
+        OUTPUT ${FABRIC_LIB_OUTDIR}/${_out_file}
+        COMMAND ${_project_root}/scripts/dll2lib.bat 64 "${${_lib_var}}"
+        WORKING_DIRECTORY ${FABRIC_LIB_OUTDIR}
         VERBATIM
     )
 
@@ -38,13 +65,13 @@ function(add_fabric_lib)
     #set_target_properties(FabricClient PROPERTIES IMPORTED_IMPLIB ${CMAKE_CURRENT_BINARY_DIR}/FabricClient.lib )
     set_target_properties(${FABRIC_LIB_NAME} PROPERTIES
         IMPORTED_LOCATION ${_lib_var}
-        IMPORTED_IMPLIB ${fabric-metadata_SOURCE_DIR}/importlibs/${_out_file}
+        IMPORTED_IMPLIB ${FABRIC_LIB_OUTDIR}/${_out_file}
     )
 
     set(_generate_target_name "generate_${FABRIC_LIB_NAME}_lib")
     add_custom_target(${_generate_target_name}
         DEPENDS 
-        ${fabric-metadata_SOURCE_DIR}/importlibs/${_out_file}
+        ${FABRIC_LIB_OUTDIR}/${_out_file}
     )
 
     add_dependencies(${FABRIC_LIB_NAME} ${_generate_target_name})
