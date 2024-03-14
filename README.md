@@ -32,5 +32,4 @@ Exposes fabric support libs to rust lang through build.rs.
 winmd is used by windows rust tool chain to generate rust bindings. See [service-fabric-rs](https://github.com/youyuanwu/service-fabric-rs) for details.
 
 # License
-idl files and generated cpp and c files have Microsoft MIT license.
-The project has MIT license.
+Microsoft MIT license
