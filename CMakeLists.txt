@@ -17,7 +17,7 @@ if(fabric_metadata_MAIN_PROJECT)
 endif()
 
 include(cmake/ImportFabric.cmake)
-# add_subdirectory(src)
+add_subdirectory(src)
 
 if(fabric_metadata_MAIN_PROJECT)
   # generate winmd. defer generation task in .metadata csproj.
