@@ -1,4 +1,4 @@
 --traverse
 <IncludeRoot>/fabrictransport_.h
 --namespace
-Microsoft.ServiceFabric.FabricTransport
+Microsoft.ServiceFabric.Internal.FabricTransport

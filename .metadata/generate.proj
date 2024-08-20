@@ -6,7 +6,6 @@
         <ExcludeFromCrossarch>true</ExcludeFromCrossarch>
         <ScanArch>x64</ScanArch>
         <SFIdlDir>../idl</SFIdlDir>
-        <SFInternalIdlDir>../internal_idl</SFInternalIdlDir>
         <AdditionalIncludes>$(SFIdlDir)</AdditionalIncludes>
         <!--compiled h headers from idl-->
         <SdkIncRoot>obj\CompiledHeaders</SdkIncRoot>

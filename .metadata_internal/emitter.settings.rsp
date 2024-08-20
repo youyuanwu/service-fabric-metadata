@@ -1,0 +1,8 @@
+--typeImport
+# ServiceFabric base
+IFabricAsyncOperationContext(interface)=<Microsoft.ServiceFabric, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null>Microsoft.ServiceFabric.FabricCommon.IFabricAsyncOperationContext
+IFabricAsyncOperationCallback(interface)=<Microsoft.ServiceFabric, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null>Microsoft.ServiceFabric.FabricCommon.IFabricAsyncOperationCallback
+IFabricStringResult(interface)=<Microsoft.ServiceFabric, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null>Microsoft.ServiceFabric.FabricCommon.IFabricStringResult
+FABRIC_SECURITY_CREDENTIALS=<Microsoft.ServiceFabric, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null>Microsoft.ServiceFabric.FabricTypes.FABRIC_SECURITY_CREDENTIALS
+--memberRemap
+^IFabric\w+$=[Agile]

@@ -42,6 +42,14 @@ if(fabric_metadata_MAIN_PROJECT)
     VERBATIM
   )
 
+  set(_out_internal_winmd_path ${CMAKE_CURRENT_SOURCE_DIR}/.windows/winmd/Microsoft.ServiceFabric.Internal.winmd)
+  add_custom_command(OUTPUT
+    OUTPUT ${_out_internal_winmd_path}
+    COMMAND ${dotnet_exe} build
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.metadata_internal
+    VERBATIM
+  )
+
   # add fabric import libs
   set(FABRIC_LIB_NAMES
     FabricCommon
@@ -73,7 +81,7 @@ if(fabric_metadata_MAIN_PROJECT)
 
   # force generate
   add_custom_target(generate_winmd
-    DEPENDS ${_out_winmd_paths}
+    DEPENDS ${_out_winmd_paths} ${_out_internal_winmd_path}
     generate_importlibs # generator needs to scan support lib files
   )
 
@@ -95,7 +103,8 @@ if(fabric_metadata_MAIN_PROJECT)
   )
 
   add_custom_target(soft_clean
-    COMMAND ${dotnet_exe} clean
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/.metadata
+    # COMMAND ${dotnet_exe} clean .metadata/generate.proj
+    COMMAND ${dotnet_exe} clean .metadata_internal/generate.proj
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   )
 endif()
