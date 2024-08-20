@@ -20,7 +20,7 @@
     <!-- Note: Native typedef is defined in autoTypes.json. The metadata generator eliminates native types during scanning. 
     But native types/typedef make generated code better. -->
     <ItemGroup>
-        <Idls Include="$(SFIdlDir)\FabricClient.idl;$(SFIdlDir)\FabricCommon.idl;$(SFIdlDir)\FabricRuntime.idl;$(SFIdlDir)\FabricTypes.idl;$(SFInternalIdlDir)\fabrictransport_.idl" />
+        <Idls Include="$(SFIdlDir)\FabricClient.idl;$(SFIdlDir)\FabricCommon.idl;$(SFIdlDir)\FabricRuntime.idl;$(SFIdlDir)\FabricTypes.idl" />
         <ImportLibs Include="../importlibs/*.lib" />
         <PartitionFiles Include="partitions\**\main.cpp"/>
         <Partition Include="@(PartitionFiles)">
